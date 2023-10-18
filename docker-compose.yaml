@@ -11,8 +11,8 @@ services:
     ports:
     - 80:80
     volumes:
-    - ~/docker_nginx_php_mysql/vhost.conf:/etc/nginx/conf.d/default.conf
-    - ~/docker_nginx_php_mysql:/var/www/public_html
+    - ${PATH_FOR_PROJECT}/vhost.conf:/etc/nginx/conf.d/default.conf # ~/docker_nginx_php_mysql/vhost.conf:/etc/nginx/conf.d/default.conf
+    - ${PATH_FOR_PROJECT}:/var/www/public_html                      # ~/docker_nginx_php_mysql:/var/www/public_html
     networks:
     - network1
     depends_on:
@@ -20,9 +20,9 @@ services:
       - my_sql
   my_php:
     container_name: my_php
-    build: ~/docker_nginx_php_mysql/images/php
+    build: ${PATH_FOR_PROJECT}/images/php                           # ~/docker_nginx_php_mysql/images/php
     volumes:
-      - ~/docker_nginx_php_mysql:/var/www/public_html
+      - ${PATH_FOR_PROJECT}:/var/www/public_html                    # ~/docker_nginx_php_mysql:/var/www/public_html
     networks:
       - network1
     depends_on:
@@ -31,7 +31,7 @@ services:
     container_name: my_sql
     image: mysql
     volumes:
-      - ~/docker_nginx_php_mysql/mysql-data:/var/lib/mysql
+      - ${PATH_FOR_PROJECT}/mysql-data:/var/lib/mysql               # ~/docker_nginx_php_mysql/mysql-data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
     networks:
