@@ -1,0 +1,51 @@
+---
+version: "3.5"
+
+networks:
+  network1:
+
+services:
+  my_nginx:
+    container_name: my_nginx
+    image: nginx
+    ports:
+    - 80:80
+    volumes:
+    - ~/docker_nginx_php_mysql/vhost.conf:/etc/nginx/conf.d/default.conf
+    - ~/docker_nginx_php_mysql:/var/www/public_html
+    networks:
+    - network1
+    depends_on:
+      - my_php
+      - my_sql
+  my_php:
+    container_name: my_php
+    build: ~/docker_nginx_php_mysql/images/php
+    volumes:
+      - ~/docker_nginx_php_mysql:/var/www/public_html
+    networks:
+      - network1
+    depends_on:
+      - my_sql
+  my_sql:
+    container_name: my_sql
+    image: mysql
+    volumes:
+      - ~/docker_nginx_php_mysql/mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - network1
+  my_phpmyadmin:
+    container_name: my_phpadmin
+    image: phpmyadmin
+    ports:
+      - 1500:80
+    environment:
+      - PMA_HOST=my_sql
+    networks:
+      - network1
+    depends_on:
+      - my_sql
+
+
